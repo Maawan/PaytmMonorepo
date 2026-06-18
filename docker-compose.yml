@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: maawan
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+   
