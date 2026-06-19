@@ -36,3 +36,37 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+# Dependencies
+node_modules
+
+# Turbo
+.turbo
+
+# Build outputs
+**/dist
+**/.next
+**/out
+**/build
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# IDE
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage
+**/coverage

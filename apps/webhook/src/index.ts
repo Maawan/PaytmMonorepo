@@ -1,10 +1,10 @@
-import express,{ Request, Response} from "express"
+import express,{Response} from "express"
 
 const app = express();
 
-app.get("/", (req : Request, res : Response) => {
+app.get("/", (res : Response) => {
     
-    res.json(200).json({
+    res.status(200).json({
         msg : "Server is working fine"
     })
 })
