@@ -1,13 +1,12 @@
-import express,{Response} from "express"
+import express,{Request , Response} from "express"
 
 const app = express();
 
-app.get("/", (res : Response) => {
-    
+app.get("/", (_req: Request, res: Response) => {
     res.status(200).json({
-        msg : "Server is working fine...:)"
-    })
-})
+        msg: "Server is up and running ..."
+    });
+});
 
 
 
