@@ -8,7 +8,7 @@ import prisma from "@repo/db";
         await prisma.$connect()
         console.log('Prisma connected')
     } catch (err) {
-        console.error('Prisma connection error:', err)
+        console.error('Prisma connection error..:', err)
     }
 })();
 
