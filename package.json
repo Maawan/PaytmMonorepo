@@ -9,6 +9,11 @@
     "check-types": "turbo run check-types",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint"
+    ]
+  },
   "devDependencies": {
     "@types/node": "^25.9.3",
     "dotenv": "^17.4.2",
