@@ -10,10 +10,11 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/db": "*",
     "next": "^16.2.9",
+    "next-auth": "^4.24.14",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "@repo/db": "*"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

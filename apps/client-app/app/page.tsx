@@ -1,4 +1,14 @@
-export default function Home() {
+import { getServerSession } from "next-auth";
+import Link from "next/link";
+import {redirect} from "next/navigation"
+import { authOptions } from "@/app/lib/auth"
+
+
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  if(session){
+    redirect("/ofmnero");
+  }
   return (
     <main className="min-h-screen bg-white text-gray-900 font-sans">
 
@@ -18,14 +28,14 @@ export default function Home() {
           <a href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Features</a>
           <a href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">How it works</a>
           <a href="#" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">Security</a>
-          <a href="#" className="text-sm text-gray-900 border border-gray-200 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors">Sign in</a>
-          <a href="#" className="text-sm text-white bg-emerald-500 rounded-lg px-4 py-2 hover:bg-emerald-600 transition-colors font-medium">Get started</a>
+          <Link href="/login" className="text-sm text-gray-900 border border-gray-200 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors">Sign in</Link>
+          <Link href="/register" className="text-sm text-white bg-emerald-500 rounded-lg px-4 py-2 hover:bg-emerald-600 transition-colors font-medium">Get started</Link>
         </div>
 
         {/* Mobile nav — just two buttons */}
         <div className="flex md:hidden items-center gap-2">
-          <a href="#" className="text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5">Sign in</a>
-          <a href="#" className="text-sm text-white bg-emerald-500 rounded-lg px-3 py-1.5 font-medium">Get started</a>
+          <Link href="/login" className="text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5">Sign in</Link>
+          <Link href="/register" className="text-sm text-white bg-emerald-500 rounded-lg px-3 py-1.5 font-medium">Get started</Link>
         </div>
       </nav>
 
@@ -44,9 +54,9 @@ export default function Home() {
             Add money from any bank, send to anyone instantly, withdraw whenever you want. One wallet, no friction.
           </p>
           <div className="flex items-center gap-3">
-            <a href="#" className="bg-emerald-500 hover:bg-emerald-600 transition-colors text-white text-sm font-medium px-5 md:px-6 py-3 md:py-3.5 rounded-xl">
+            <Link href="/register" className="bg-emerald-500 hover:bg-emerald-600 transition-colors text-white text-sm font-medium px-5 md:px-6 py-3 md:py-3.5 rounded-xl">
               Create free wallet
-            </a>
+            </Link>
             <a href="#" className="border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-sm font-medium px-5 md:px-6 py-3 md:py-3.5 rounded-xl flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <circle cx="7" cy="7" r="6.5" stroke="currentColor" />
@@ -225,9 +235,9 @@ export default function Home() {
             <h2 className="text-2xl md:text-4xl font-medium text-white tracking-tight mb-2 md:mb-3">Ready to move your money?</h2>
             <p className="text-emerald-100 text-base md:text-lg">Join 2 million users. It takes under a minute.</p>
           </div>
-          <a href="#" className="bg-white text-emerald-600 font-medium text-sm px-7 py-3.5 md:px-8 md:py-4 rounded-xl hover:bg-emerald-50 transition-colors whitespace-nowrap">
+          <Link href="/register" className="bg-white text-emerald-600 font-medium text-sm px-7 py-3.5 md:px-8 md:py-4 rounded-xl hover:bg-emerald-50 transition-colors whitespace-nowrap">
             Create your wallet →
-          </a>
+          </Link>
         </div>
       </section>
 
