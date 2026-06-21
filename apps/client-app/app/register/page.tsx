@@ -141,7 +141,7 @@ export default function SignUp() {
             <div className="flex items-start gap-2.5 pt-1">
               <input type="checkbox" id="terms" className="mt-0.5 accent-emerald-500" />
               <label htmlFor="terms" className="text-xs text-gray-400 leading-relaxed">
-                I agree to PayFlow's{" "}
+                I agree to PayFlow&apos;s{" "}
                 <a href="#" className="text-emerald-600 hover:underline">Terms of Service</a>{" "}
                 and{" "}
                 <a href="#" className="text-emerald-600 hover:underline">Privacy Policy</a>

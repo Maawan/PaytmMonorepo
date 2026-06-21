@@ -100,11 +100,10 @@ export default function Login() {
 
               setLoading(false);
 
-              if (res && (res as any).ok) {
+              if (res?.ok) {
                 router.replace("/");
               } else {
-                const error = res && (res as any).error ? (res as any).error : "Sign in failed";
-                alert(error);
+                alert(res?.error ?? "Sign in failed");
               }
             }}
           >
@@ -170,7 +169,7 @@ export default function Login() {
           </div>
 
           <p className="text-center text-sm text-gray-400 mt-6">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a href="/signup" className="text-emerald-600 font-medium hover:underline">Create one free</a>
           </p>
         </div>
