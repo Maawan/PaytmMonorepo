@@ -1,5 +1,6 @@
 // lib/auth.ts
 
+import prisma from "@repo/db";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -11,10 +12,23 @@ export const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials) {
-        console.log("reacged herer ....");
-        setTimeout(() => {
-          
-        }, 5000);
+        console.log(credentials);
+        const users = await prisma.user.findFirst({
+          where : {
+            email : credentials?.email
+          }
+        })
+        if(!users){
+          await prisma.user.create({
+            data : {
+              name : "Sample Name",
+              email : credentials?.email,
+              password : credentials?.password || "",
+              number : ""
+            }
+          })
+        }
+        
         return {
           id: "1",
           name: "Sample Uer",
