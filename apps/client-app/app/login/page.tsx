@@ -158,7 +158,7 @@ export default function Login() {
           </form>
 
           {/* OTP option */}
-          <div className="mt-4">
+          <div className="mt-4 hidden">
             <button className="w-full border border-gray-200 hover:border-gray-300 transition-colors text-gray-600 text-sm font-medium py-3.5 rounded-xl flex items-center justify-center gap-2">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                 <rect x="2" y="1" width="11" height="13" rx="2" />

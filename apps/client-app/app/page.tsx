@@ -7,7 +7,7 @@ import { authOptions } from "@/app/lib/auth"
 export default async function Home() {
   const session = await getServerSession(authOptions);
   if(session){
-    redirect("/ofmnero");
+    redirect("/dashboard");
   }
   return (
     <main className="min-h-screen bg-white text-gray-900 font-sans">
