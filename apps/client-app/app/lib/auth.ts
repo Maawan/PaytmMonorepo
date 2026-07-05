@@ -1,7 +1,7 @@
 // lib/auth.ts
 
 import prisma from "@repo/db";
-import type { User } from "@repo/db";
+// import type { User } from "@repo/db";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -31,12 +31,12 @@ export const authOptions: NextAuthOptions = {
           })
         }
         
-        const user: User = {
-          id: String(users?.id ?? 1),
-          name: users?.name ?? "Sample User",
-          email: users?.email ?? "user@user.com",
-          number: users?.number ?? "",
-          password: users?.password ?? "",
+        const user = {
+          id: "1",
+          name: "Sample User",
+          email: "user@user.com",
+          number: "",
+          password: "",
         };
 
         return user;

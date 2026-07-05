@@ -1,13 +1,13 @@
 "use client"
-
 import { Loading } from "@/components/Loading"
-import { RecoilRoot } from "recoil"
+import { Toaster } from "react-hot-toast"
 
 export default function Providers({children} : { children : React.ReactNode}){
     return (
         <>
-        <Loading />
-        {children}
-            </>
+            <Loading />
+                {children}
+            <Toaster />
+        </>
     )
 }

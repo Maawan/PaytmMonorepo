@@ -5,6 +5,7 @@ import { loadingAtom } from "@/store/atoms/LoadingAtom";
 import { useSetAtom } from "jotai";
 import Email from "next-auth/providers/email";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function SignUp() {
   const setLoading = useSetAtom(loadingAtom);
@@ -16,8 +17,19 @@ export default function SignUp() {
   })
 
   const register = () => {
+    
+    if(userCreds.name.length == 0){
+      toast.error("First Name can't be empty");
+    }else if(userCreds.email.length == 0){
+      toast.error("Email can't be empty");
+    }else if(userCreds.phone.length == 0){
+      toast.error("Phone number can't be empty");
+    }else if(userCreds.password.length == 0){
+      toast.error("Password can't be empty")
+    }
+
     setLoading((prev) => !prev);
-    console.log(userCreds);
+
   }
 
 
