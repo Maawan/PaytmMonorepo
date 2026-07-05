@@ -1,9 +1,34 @@
+"use client"
+
+import { Loading } from "@/components/Loading";
+import { loadingAtom } from "@/store/atoms/LoadingAtom";
+import { useSetAtom } from "jotai";
+import Email from "next-auth/providers/email";
+import { useState } from "react";
+
 export default function SignUp() {
+  const setLoading = useSetAtom(loadingAtom);
+  const [userCreds, setUserCreds] = useState({
+    name : "",
+    email : "",
+    phone : "",
+    password : ""
+  })
+
+  const register = () => {
+    setLoading((prev) => !prev);
+    console.log(userCreds);
+  }
+
+
+
   return (
     <main className="min-h-screen bg-white text-gray-900 font-sans flex">
 
       {/* Left panel — branding */}
+      
       <div className="hidden lg:flex flex-col justify-between w-[42%] bg-emerald-500 px-12 py-10">
+        
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -81,6 +106,10 @@ export default function SignUp() {
                 type="text"
                 placeholder="Rahul Kumar"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 transition-all"
+                value={userCreds.name}
+                onChange={(e) => {
+                  setUserCreds({...userCreds, name : e.target.value})
+                }}
               />
             </div>
 
@@ -91,6 +120,10 @@ export default function SignUp() {
                 type="email"
                 placeholder="rahul@example.com"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 transition-all"
+                value={userCreds.email}
+                onChange={(e) => {
+                  setUserCreds({...userCreds, email : e.target.value})
+                }}
               />
             </div>
 
@@ -107,8 +140,12 @@ export default function SignUp() {
                 </div>
                 <input
                   type="tel"
-                  placeholder="98765 43210"
+                  placeholder="9876543210"
                   className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 transition-all"
+                  value= {userCreds.phone}
+                  onChange={(e) => {
+                    setUserCreds({...userCreds, phone : e.target.value})
+                  }}
                 />
               </div>
             </div>
@@ -121,6 +158,10 @@ export default function SignUp() {
                   type="password"
                   placeholder="Min. 8 characters"
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 transition-all pr-10"
+                  value={userCreds.password}
+                  onChange={(e) => {
+                    setUserCreds({...userCreds, password : e.target.value})
+                  }}
                 />
                 <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 transition-colors">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
@@ -151,6 +192,10 @@ export default function SignUp() {
             <button
               type="submit"
               className="w-full bg-emerald-500 hover:bg-emerald-600 transition-colors text-white text-sm font-medium py-3.5 rounded-xl mt-2"
+              onClick={(e) => {
+                e.preventDefault();
+                register();
+              }}
             >
               Create account
             </button>
@@ -162,6 +207,8 @@ export default function SignUp() {
           </p>
         </div>
       </div>
+      
     </main>
+    
   );
 }

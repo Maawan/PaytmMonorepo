@@ -14,11 +14,18 @@ import prisma from "@repo/db";
 
 app.get("/", async (_req: Request, res: Response) => {
         try {
-                const users = await prisma.user.findMany();
+                // const users = await prisma.user.findMany();
+                // const safeUsers: User[] = users.map((user) => ({
+                //         id: String(user.id),
+                //         name: user.name,
+                //         email: user.email,
+                //         number: user.number,
+                //         password: user.password,
+                // }));
 
                 res.status(200).json({
                         msg: "Server is up and running",
-                        users,
+                        // users: safeUsers,
                 });
         } catch (err) {
                 console.error('Prisma query error:', err)
