@@ -3,12 +3,67 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useSetAtom } from "jotai";
+import { loadingAtom } from "@/store/atoms/LoadingAtom";
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!email || email.trim().length === 0) {
+      toast.error("Email can't be empty");
+      return;
+    }
+
+    if (!password || password.trim().length === 0) {
+      toast.error("Password can't be empty");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    setIsPending(true); // 👈 only button-level state, no global loadingAtom
+
+    let result;
+    try {
+      result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong. Please try again.");
+      setIsPending(false);
+      return;
+    }
+
+    if (result?.error) {
+      toast.error("Invalid email or password");
+      setIsPending(false);
+      return;
+    }
+
+    if (result?.ok) {
+      router.push("/dashboard");
+      // no need to setIsPending(false) — page is navigating away
+    }
+  }
 
   return (
     <main className="min-h-screen bg-white text-gray-900 font-sans flex">
@@ -89,23 +144,7 @@ export default function Login() {
 
           <form
             className="space-y-4"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setLoading(true);
-              const res = await signIn("credentials", {
-                redirect: false,
-                email,
-                password,
-              });
-
-              setLoading(false);
-
-              if (res?.ok) {
-                router.replace("/");
-              } else {
-                alert(res?.error ?? "Sign in failed");
-              }
-            }}
+            onSubmit={handleSubmit}
           >
             {/* Email or phone */}
             <div>
@@ -150,10 +189,35 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={loading}
-              className={`w-full ${loading ? "opacity-60" : "bg-emerald-500 hover:bg-emerald-600"} transition-colors text-white text-sm font-medium py-3.5 rounded-xl mt-2`}
+              disabled={isPending}
+              className={`w-full flex items-center justify-center gap-2.5 transition-colors text-white text-sm font-medium py-3.5 rounded-xl mt-2 ${
+                isPending
+                  ? "bg-emerald-400 cursor-not-allowed"
+                  : "bg-emerald-500 hover:bg-emerald-600 cursor-pointer"
+              }`}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white" // 👈 bumped from h-4 w-4
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3.5" // 👈 slightly thicker ring (was 4, but at bigger size 3.5 looks cleaner — tweak to taste)
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
+                </svg>
+              )}
+              {isPending ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
