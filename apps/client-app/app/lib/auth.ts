@@ -1,6 +1,7 @@
 // lib/auth.ts
 
 import prisma from "@repo/db";
+import bcrypt from "bcryptjs";
 // import type { User } from "@repo/db";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -14,32 +15,26 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         console.log(credentials);
-        const users = await prisma.user.findFirst({
+        const user = await prisma.user.findFirst({
           where : {
             email : credentials?.email
           }
         })
-
-        if(!users){
-          await prisma.user.create({
-            data : {
-              name : "Sample Name",
-              email : credentials?.email,
-              password : credentials?.password || "",
-              number : ""
-            }
-          })
+        if(!user){
+          throw new Error("Wrong credentails")
         }
-        
-        const user = {
-          id: "1",
-          name: "Sample User",
-          email: "user@user.com",
-          number: "",
-          password: "",
-        };
+        const isPasswordCorrect = await bcrypt.compare(credentials?.password || "" , user?.password || "");
 
-        return user;
+        if(!isPasswordCorrect){
+          throw new Error("Wrong credentails")
+        }
+        const response = {
+          id : String(user?.id),
+          name : user?.name,
+          email : user?.email,
+          phone : user?.number
+        }
+        return response;
       },
       
     }),
