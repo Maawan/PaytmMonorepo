@@ -4,11 +4,17 @@ import { Loading } from "@/components/Loading";
 import { loadingAtom } from "@/store/atoms/LoadingAtom";
 import { useSetAtom } from "jotai";
 import Email from "next-auth/providers/email";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { registerUser } from "../actions/register";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const setLoading = useSetAtom(loadingAtom);
+  const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
+  const [termsCheck, setTermsCheck] = useState(false);
   const [userCreds, setUserCreds] = useState({
     name : "",
     email : "",
@@ -16,7 +22,31 @@ export default function SignUp() {
     password : ""
   })
 
-  const register = () => {
+  const isFormValid =
+    userCreds.name.length > 0 &&
+    userCreds.email.length > 0 &&
+    userCreds.phone.length > 0 &&
+    userCreds.password.length >= 8 &&
+    termsCheck;
+
+  
+
+  function validateInputs(): boolean {
+    if(userCreds.name.length == 0){
+      return false;
+    }else if(userCreds.email.length == 0){
+      return false;
+    }else if(userCreds.phone.length == 0){
+      return false;
+    }else if(userCreds.password.length == 0){
+      return false;
+    }else if(!termsCheck){
+      return false;
+    }
+    return true;
+  }
+
+  const register = async () => {
     
     if(userCreds.name.length == 0){
       toast.error("First Name can't be empty");
@@ -28,7 +58,34 @@ export default function SignUp() {
       toast.error("Password can't be empty")
     }
 
-    setLoading((prev) => !prev);
+    setIsPending(true);
+
+    try{
+      const result = await registerUser(userCreds);
+      if(result.error){
+        toast.error(result.error);
+        return;
+      }
+
+      const signInResult = await signIn("credentials", {
+        email: userCreds.email,
+        password : userCreds.password,
+        redirect: false
+      })
+      if(signInResult?.error){
+        toast.success("Account created! Please log in.");
+        router.push("/login");
+        return;
+      }
+
+      toast.success("Welcome to PayFlow!");
+      router.push("/dashboard");
+    }catch(err) {
+      console.log(err);
+      toast.error("Something went wrong — please try again");
+    }finally{
+      setIsPending(false);
+    }
 
   }
 
@@ -192,7 +249,10 @@ export default function SignUp() {
 
             {/* Terms */}
             <div className="flex items-start gap-2.5 pt-1">
-              <input type="checkbox" id="terms" className="mt-0.5 accent-emerald-500" />
+              <input type="checkbox" id="terms" className="mt-0.5 accent-emerald-500" checked={termsCheck} onChange={(e)=>{
+                // console.log(e.target.checked)
+                setTermsCheck(e.target.checked);
+              }} />
               <label htmlFor="terms" className="text-xs text-gray-400 leading-relaxed">
                 I agree to PayFlow&apos;s{" "}
                 <a href="#" className="text-emerald-600 hover:underline">Terms of Service</a>{" "}
@@ -203,13 +263,35 @@ export default function SignUp() {
 
             <button
               type="submit"
-              className="w-full bg-emerald-500 hover:bg-emerald-600 transition-colors text-white text-sm font-medium py-3.5 rounded-xl mt-2"
+              disabled={isPending}
+              className={`w-full  flex items-center justify-center gap-2.5 transition-colors text-white text-sm font-medium py-3.5 rounded-xl mt-2  ${isFormValid ? (isPending ? "bg-emerald-400 cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600 cursor-pointer") : ("bg-emerald-300 cursor-not-allowed")}`}
               onClick={(e) => {
                 e.preventDefault();
                 register();
               }}
             >
-              Create account
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white" // 👈 bumped from h-4 w-4
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3.5" // 👈 slightly thicker ring (was 4, but at bigger size 3.5 looks cleaner — tweak to taste)
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
+                </svg>
+              )}
+              {isPending ? "Creating your account..." : "Create account"}
             </button>
           </form>
 
