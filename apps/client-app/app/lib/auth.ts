@@ -1,10 +1,8 @@
-// lib/auth.ts
-
 import prisma from "@repo/db";
 import bcrypt from "bcryptjs";
-// import type { User } from "@repo/db";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -34,9 +32,14 @@ export const authOptions: NextAuthOptions = {
           email : user?.email,
           phone : user?.number
         }
+        
         return response;
       },
       
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
